@@ -1,0 +1,11 @@
+# for runnung backend normnally
+
+docker run -d --rm --name harshbackend -v logs:/app/logs/ -p 80:80 -v "D:\codes\Docker\creat multicontainer application\backend:/app" --network harshfullstack -v /app/node_modules node:backend
+
+# for running backend with mongodb user name and password
+
+docker run -d --rm -e MONGO_INITDB_ROOT_USERNAME=username -e MONGO_INITDB_ROOT_PASSWORD=password --name harshbackend -v logs:/app/logs/ -p 80:80 -v "D:\codes\Docker\creat multicontainer application\backend:/app" --network harshfullstack -v /app/node_modules node:backend
+
+# for running frontend
+
+docker run --name harshfrontend -it --rm -d -p 3000:3000 -v "D:\codes\Docker\creat multicontainer application\frontend\src:/app/src/" -v /app/node_modules node:frontend

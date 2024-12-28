@@ -1,0 +1,67 @@
+version: '3.8'
+services:
+  backend:
+    # image: 'node:backend'
+    # if we want to build the image from the Dockerfile
+
+    # build:
+    #   path: ./backend    
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    #   args:
+    #     - NODE_ENV=production
+    build: ./backend
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=max
+    #   - MONGO_INITDB_ROOT_PASSWORD=secret
+    ports:
+      - "80:80"
+    volumes:
+      - logs:/app/logs
+      - ./backend:/app  #  bind mount
+      - /app/node_modules
+    
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - database
+
+
+  frontend:
+    # image: 'node:frontend'
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+      - /app/node_modules
+    # env_file:
+    #   - ./env/frontend.env
+    depends_on:
+      - backend
+      - database
+    # for -it flag
+    stdin_open: true
+    tty: true
+
+
+
+  database:
+    image: 'mongo'
+    volumes:
+      - data:/data/db
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=max
+    #   - MONGO_INITDB_ROOT_PASSWORD=secret
+    env_file:
+      - ./env/mongo.env
+    # docker already creat network for us which include all the services mentioned here
+    # so we don't need to create it
+    # networks:
+    #   - harshfullstack
+
+volumes:
+  data:
+  logs:
+
